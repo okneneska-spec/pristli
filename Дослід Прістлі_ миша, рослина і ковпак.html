@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дослід Прістлі: миша, рослина і ковпак</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#23262b;--mut:#6b7078;--bd:#dcdad3;--ac:#2f7d4f;--bad:#c0392b;--warn:#c98a10;--sky:#eaf3f6;--glass:#7fb7c9;--table:#a98b66;--soil:#7a5638;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181b;--card:#1f2226;--tx:#e8e8e6;--mut:#9aa0a8;--bd:#33373d;--ac:#5cc283;--bad:#ee7466;--warn:#e5ad3c;--sky:#232d33;--glass:#8fc4d4;--table:#8a6f4f;--soil:#6a4a30}}
+:root[data-theme="dark"]{--bg:#16181b;--card:#1f2226;--tx:#e8e8e6;--mut:#9aa0a8;--bd:#33373d;--ac:#5cc283;--bad:#ee7466;--warn:#e5ad3c;--sky:#232d33;--glass:#8fc4d4;--table:#8a6f4f;--soil:#6a4a30}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 14px;font-size:.92rem}
+.grid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+svg{width:100%;height:auto;display:block}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+button{font:inherit;font-size:.9rem;padding:8px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button:hover{border-color:var(--ac)}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.row{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.92rem}
+.row label{min-width:128px}.row input[type=range]{flex:1}.row output{min-width:44px;text-align:right;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat{border:1px solid var(--bd);border-radius:10px;padding:8px;text-align:center}
+.stat small{display:block;color:var(--mut);font-size:.75rem}.stat b{font-size:1.1rem}
+.note{font-size:.85rem;color:var(--mut);margin-top:10px}
+.tx{fill:var(--mut);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Дослід Джозефа Прістлі (1771)</h1>
+<p class="sub">Миша, свічка й рослина під скляним ковпаком. Оберіть сценарій або змінюйте параметри повзунками.</p>
+<div class="grid">
+<div class="card">
+<svg id="scene" viewBox="0 0 400 300" role="img" aria-label="Ковпак з мишею, свічкою і рослинами">
+<rect id="bgl" x="0" y="0" width="400" height="300" fill="var(--sky)"/>
+<g id="sun"><circle cx="350" cy="40" r="20" fill="#f2b705"/><g stroke="#f2b705" stroke-width="3" stroke-linecap="round"><path d="M350 8v8M350 64v8M318 40h8M374 40h8M327 17l6 6M367 57l6 6M373 17l-6 6M333 57l-6 6"/></g></g>
+<rect x="60" y="250" width="280" height="16" rx="4" fill="var(--table)"/>
+<rect x="80" y="266" width="12" height="30" fill="var(--table)"/><rect x="308" y="266" width="12" height="30" fill="var(--table)"/>
+<path id="jar" d="M110 250V130C110 78 150 52 200 52S290 78 290 130V250Z" fill="var(--glass)" fill-opacity=".25" stroke="var(--glass)" stroke-width="3"/>
+<circle cx="200" cy="46" r="6" fill="none" stroke="var(--glass)" stroke-width="3"/>
+<g id="candle"><rect x="126" y="212" width="12" height="38" fill="#f3ead2" stroke="#b9ad8a"/><path id="flame" d="M132 190c-7 8-7 15 0 20 7-5 7-12 0-20Z" fill="#f59f00"/></g>
+<g id="plants"></g>
+<g id="mouse"><ellipse cx="0" cy="0" rx="20" ry="11" fill="#b9a58f"/><circle cx="-19" cy="-2" r="8" fill="#b9a58f"/><circle cx="-16" cy="-9" r="4" fill="#d9a5a5"/><path d="M19 0c12 0 16-8 24-4" fill="none" stroke="#d9a5a5" stroke-width="2.5" stroke-linecap="round"/><circle id="eye" cx="-23" cy="-3" r="1.8" fill="#222"/><path id="eyex" d="M-26-6l6 6m0-6l-6 6" stroke="#222" stroke-width="1.6" visibility="hidden"/><circle cx="-27" cy="0" r="1.6" fill="#d96a6a"/></g>
+<rect id="dark" x="0" y="0" width="400" height="300" fill="#000" opacity="0" pointer-events="none"/>
+<text class="tx" x="12" y="290">Колір скла показує «свіжість» повітря</text>
+</svg>
+</div>
+<div class="card">
+<div class="btns" id="sc">
+<button data-s="1">Лише миша</button>
+<button data-s="2">Миша + рослина, світло</button>
+<button data-s="3">Миша + рослина, темрява</button>
+<button data-s="4">Рослина без миші</button>
+</div>
+<div class="stats">
+<div class="stat"><small>Кисень, %</small><b id="o2">21.0</b></div>
+<div class="stat"><small>Миша</small><b id="ms">жива</b></div>
+<div class="stat"><small>Свічка</small><b id="cs">горить</b></div>
+</div>
+<svg id="chart" viewBox="0 0 400 170" role="img" aria-label="Графік кисню в часі"></svg>
+<div class="row"><label for="light">Освітленість</label><input id="light" type="range" min="0" max="100" value="100"><output id="lo">100%</output></div>
+<div class="row"><label for="np">Рослин</label><input id="np" type="range" min="0" max="3" value="1"><output id="po">1</output></div>
+<div class="row"><label for="sp">Швидкість часу</label><input id="sp" type="range" min="1" max="6" value="2"><output id="so">×2</output></div>
+<div class="row"><label><input id="cm" type="checkbox" checked> Миша</label><label><input id="cc" type="checkbox" checked> Свічка</label><button id="pause">Пауза</button><button id="reset">Скинути</button></div>
+</div>
+</div>
+<p class="note">Модель спрощена й навчальна. Прістлі не знав про кисень (його відкрили 1774 р.) і казав про «зіпсуте» та «відновлене» повітря. Роль світла встановив Ян Інгенхауз 1779 р.: без світла рослина повітря не відновлює. Графік: лінія 15% — свічка гасне, лінія 10% — миша гине (умовні пороги).</p>
+</div>
+<script>
+const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg";
+let S;
+function reset(){S={t:0,o2:21,h:[[0,21]],mouseAlive:true,candleOut:false,paused:S?S.paused:false};}
+reset();
+const el={light:$("light"),np:$("np"),sp:$("sp"),cm:$("cm"),cc:$("cc")};
+function drawPlants(){
+const g=$("plants");g.innerHTML="";
+const n=+el.np.value,xs=[236,262,278];
+for(let i=0;i<n;i++){
+const p=document.createElementNS(NS,"g");p.setAttribute("class","pl");p.setAttribute("transform","translate("+xs[i]+",250)");
+p.innerHTML='<path d="M-9 0h18l-3 -14h-12Z" fill="var(--soil)"/><path d="M0 -14V-52" stroke="#3b8f4f" stroke-width="3" fill="none"/><g class="lv"><ellipse cx="-11" cy="-40" rx="11" ry="5" fill="#3b8f4f" transform="rotate(-25 -11 -40)"/><ellipse cx="11" cy="-48" rx="11" ry="5" fill="#4aa85f" transform="rotate(25 11 -48)"/><ellipse cx="-9" cy="-28" rx="10" ry="4.5" fill="#4aa85f" transform="rotate(-20 -9 -28)"/><ellipse cx="0" cy="-56" rx="6" ry="9" fill="#3b8f4f"/></g>';
+g.appendChild(p);}
+}
+function step(dt){
+if(!S.paused){
+const L=el.light.value/100,n=+el.np.value;
+let d=0;
+if(el.cm.checked&&S.mouseAlive)d-=0.3;
+if(el.cc.checked&&!S.candleOut)d-=0.25;
+d+=n*(L*0.5-0.05);
+S.o2=Math.max(0,Math.min(23,S.o2+d*dt));
+S.t+=dt;
+if(el.cc.checked&&!S.candleOut&&S.o2<15)S.candleOut=true;
+if(el.cm.checked&&S.mouseAlive&&S.o2<10)S.mouseAlive=false;
+const last=S.h[S.h.length-1];
+if(S.t-last[0]>0.4)S.h.push([S.t,S.o2]);
+}
+}
+function mouseState(){
+if(!el.cm.checked)return"немає";
+if(!S.mouseAlive)return"загинула";
+if(S.o2<13)return"млява";
+return"жива";
+}
+function render(ts){
+const o=S.o2,k=Math.max(0,Math.min(1,(o-8)/13)),hue=30+k*120;
+$("jar").setAttribute("fill",`hsl(${hue} 45% 55%)`);
+const L=el.light.value/100;
+$("dark").setAttribute("opacity",(0.55*(1-L)).toFixed(2));
+$("sun").setAttribute("opacity",(0.15+0.85*L).toFixed(2));
+$("candle").style.display=el.cc.checked?"":"none";
+const lit=el.cc.checked&&!S.candleOut;
+$("flame").style.display=lit?"":"none";
+if(lit)$("flame").setAttribute("transform","translate(132 210) scale(1,"+(0.9+0.12*Math.sin(ts/90))+") translate(-132 -210)");
+const ms=mouseState();
+$("mouse").style.display=el.cm.checked?"":"none";
+const eyeX=$("eyex"),eye=$("eye");
+if(!S.mouseAlive){
+$("mouse").setAttribute("transform","translate(200,246) rotate(180)");
+eyeX.setAttribute("visibility","visible");eye.setAttribute("visibility","hidden");
+}else{
+const sl=o<13?0.35:1,bob=Math.abs(Math.sin(ts/(o<13?600:220)))*4*sl,x=200+Math.sin(ts/900*sl)*10*sl;
+$("mouse").setAttribute("transform","translate("+x.toFixed(1)+","+(238-bob).toFixed(1)+")");
+eyeX.setAttribute("visibility","hidden");eye.setAttribute("visibility","visible");
+}
+document.querySelectorAll(".lv").forEach(l=>l.setAttribute("transform","rotate("+((1-L)*0)+")"));
+document.querySelectorAll(".pl").forEach(p=>{p.style.opacity=(0.6+0.4*Math.max(L,0.15)).toFixed(2)});
+$("o2").textContent=o.toFixed(1);
+const m=$("ms");m.textContent=ms;m.style.color=ms==="загинула"?"var(--bad)":ms==="млява"?"var(--warn)":"var(--ac)";
+const c=$("cs");c.textContent=!el.cc.checked?"немає":S.candleOut?"згасла":"горить";c.style.color=S.candleOut?"var(--bad)":"var(--ac)";
+chart();
+}
+function chart(){
+const W=400,H=170,l=34,r=8,t=10,b=22,win=60,x0=Math.max(0,S.t-win),x1=x0+win;
+const X=v=>l+(v-x0)/win*(W-l-r),Y=v=>t+(25-v)/(25-5)*(H-t-b);
+let s='<rect x="0" y="0" width="400" height="170" fill="none"/>';
+[5,10,15,20,25].forEach(v=>{s+=`<line x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)"/><text class="tx" x="4" y="${Y(v)+4}">${v}%</text>`});
+s+=`<line x1="${l}" x2="${W-r}" y1="${Y(15)}" y2="${Y(15)}" stroke="var(--warn)" stroke-dasharray="4 3"/><line x1="${l}" x2="${W-r}" y1="${Y(10)}" y2="${Y(10)}" stroke="var(--bad)" stroke-dasharray="4 3"/>`;
+for(let v=Math.ceil(x0/10)*10;v<=x1;v+=10)s+=`<text class="tx" x="${X(v)-8}" y="${H-6}">${v} хв</text>`;
+const pts=S.h.filter(p=>p[0]>=x0).map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" ");
+s+=`<polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2.5"/>`;
+$("chart").innerHTML=s;
+}
+let prev=performance.now();
+function loop(ts){const dt=Math.min(0.1,(ts-prev)/1000);prev=ts;step(dt*el.sp.value*1.5);render(ts);requestAnimationFrame(loop);}
+function setS(n){
+reset();
+const c={1:[100,0,1,1],2:[100,1,1,1],3:[0,1,1,1],4:[100,1,0,0]}[n];
+el.light.value=c[0];el.np.value=c[1];el.cm.checked=!!c[2];el.cc.checked=!!c[3];
+upd();
+document.querySelectorAll("#sc button").forEach(b=>b.classList.toggle("on",+b.dataset.s===n));
+}
+function upd(){
+$("lo").textContent=el.light.value+"%";$("po").textContent=el.np.value;$("so").textContent="×"+el.sp.value;drawPlants();
+}
+document.querySelectorAll("#sc button").forEach(b=>b.onclick=()=>setS(+b.dataset.s));
+["light","np","sp"].forEach(k=>el[k].oninput=()=>{upd();document.querySelectorAll("#sc button").forEach(b=>b.classList.remove("on"))});
+el.cc.onchange=()=>{if(el.cc.checked&&S.o2>=15)S.candleOut=false};
+el.cm.onchange=()=>{if(el.cm.checked&&S.o2>=10)S.mouseAlive=true};
+$("pause").onclick=()=>{S.paused=!S.paused;$("pause").textContent=S.paused?"Продовжити":"Пауза"};
+$("reset").onclick=()=>{reset();$("pause").textContent="Пауза"};
+setS(1);requestAnimationFrame(loop);
+</script>
+</body>
+</html>
