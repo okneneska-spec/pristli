@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кровообіг: велике та мале коло</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap">
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--ink:#1d2733;--muted:#566677;--red:#e0413a;--blue:#3a6fd8;--line:#d3dce7;--tr:#fbe1df;--tb:#dde6fa;--organ:#e9eef4;--on:#1d2733;--onink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121820;--card:#1c2530;--ink:#eaf0f7;--muted:#a1b2c5;--line:#344253;--tr:#5a2623;--tb:#233a66;--organ:#25303d;--on:#eaf0f7;--onink:#121820;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121820;--card:#1c2530;--ink:#eaf0f7;--muted:#a1b2c5;--line:#344253;--tr:#5a2623;--tb:#233a66;--organ:#25303d;--on:#eaf0f7;--onink:#121820;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 32px}
+h1{font-size:clamp(1.5rem,4vw,2.1rem);margin:0 0 4px;font-weight:800}
+.sub{margin:0 0 16px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:780px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+svg{display:block;width:100%;height:auto;max-width:600px;margin:0 auto}
+svg text{font-family:inherit;fill:var(--ink);paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;cursor:pointer;color:var(--ink)}
+.seg button{flex:1 1 auto;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--on);color:var(--onink);border-color:var(--on)}
+button:focus-visible,[data-k]:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;color:var(--muted);font-size:.92rem}
+.ctl button{padding:6px 12px;border-radius:10px;border:2px solid var(--line);background:var(--card);font-weight:700}
+.ctl input{accent-color:var(--blue)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem;margin-bottom:12px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+ol.steps{margin:0 0 12px;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;margin-bottom:6px}
+ol.steps button{width:100%;text-align:left;padding:8px 10px 8px 40px;border-radius:12px;border:2px solid var(--line);background:var(--card);position:relative}
+ol.steps button::before{content:counter(s);position:absolute;left:10px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--on);color:var(--onink);font-size:.8rem;font-weight:800;display:grid;place-items:center}
+ol.steps button.on{border-color:var(--on)}
+.both{margin:0 0 12px;color:var(--muted)}
+#info h2{font-size:1.1rem;margin:0 0 4px}
+#info p{margin:0}
+.tip{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--organ);font-size:.92rem}
+.hit{fill:none;stroke:transparent;stroke-width:26;cursor:pointer;stroke-linecap:round}
+.hit.sel{stroke:var(--ink);stroke-opacity:.16}
+.ch,.organ{cursor:pointer}
+.ch.sel,.organ.sel{stroke:var(--ink);stroke-width:3.5}
+.small,.large,.trk{transition:opacity .25s}
+svg.m-small .large,svg.m-large .small{opacity:.14}
+.note{font-size:.85rem;color:var(--muted);margin:8px 0 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Кровообіг людини: мале та велике коло</h1>
+<p class="sub">Обери коло, спостерігай за рухом крові й натискай на частини схеми, щоб дізнатися більше.</p>
+<div class="grid">
+<div class="card">
+<svg id="sv" class="m-both" viewBox="0 0 600 660" role="img" aria-label="Схема кровообігу: серце, легені й органи тіла">
+<defs>
+<linearGradient id="gL" gradientUnits="userSpaceOnUse" x1="280" y1="0" x2="400" y2="0"><stop offset="0" stop-color="#3a6fd8"/><stop offset="1" stop-color="#e0413a"/></linearGradient>
+<linearGradient id="gB" gradientUnits="userSpaceOnUse" x1="400" y1="0" x2="150" y2="0"><stop offset="0" stop-color="#e0413a"/><stop offset="1" stop-color="#3a6fd8"/></linearGradient>
+</defs>
+<rect class="organ small" data-k="lungs" tabindex="0" role="button" aria-label="Легені" x="150" y="40" width="300" height="90" rx="40" fill="var(--organ)" stroke="var(--line)" stroke-width="2"/>
+<rect class="organ large" data-k="body" tabindex="0" role="button" aria-label="Органи тіла" x="120" y="540" width="340" height="100" rx="30" fill="var(--organ)" stroke="var(--line)" stroke-width="2"/>
+<rect class="ch" data-k="ra" tabindex="0" role="button" aria-label="Праве передсердя" x="190" y="258" width="80" height="64" rx="18" fill="var(--tb)" stroke="#3a6fd8" stroke-width="2"/>
+<rect class="ch" data-k="la" tabindex="0" role="button" aria-label="Ліве передсердя" x="330" y="258" width="80" height="64" rx="18" fill="var(--tr)" stroke="#e0413a" stroke-width="2"/>
+<rect class="ch" data-k="rv" tabindex="0" role="button" aria-label="Правий шлуночок" x="190" y="326" width="110" height="96" rx="22" fill="var(--tb)" stroke="#3a6fd8" stroke-width="2"/>
+<rect class="ch" data-k="lv" tabindex="0" role="button" aria-label="Лівий шлуночок" x="302" y="326" width="112" height="96" rx="22" fill="var(--tr)" stroke="#e0413a" stroke-width="2"/>
+<g id="trk"></g>
+<g id="pp"></g>
+<g id="hits"></g>
+<text x="230" y="285" text-anchor="middle" font-size="11" font-weight="700">Праве</text><text x="230" y="299" text-anchor="middle" font-size="11" font-weight="700">передсердя</text>
+<text x="370" y="285" text-anchor="middle" font-size="11" font-weight="700">Ліве</text><text x="370" y="299" text-anchor="middle" font-size="11" font-weight="700">передсердя</text>
+<text x="250" y="352" text-anchor="middle" font-size="12" font-weight="700">Правий</text><text x="250" y="366" text-anchor="middle" font-size="12" font-weight="700">шлуночок</text>
+<text x="352" y="352" text-anchor="middle" font-size="12" font-weight="700">Лівий</text><text x="352" y="366" text-anchor="middle" font-size="12" font-weight="700">шлуночок</text>
+<text class="small" x="215" y="82" text-anchor="middle" font-size="16" font-weight="800">Легені</text>
+<text class="small" x="215" y="102" text-anchor="middle" font-size="11">газообмін</text>
+<text class="small" x="414" y="78" font-size="12" font-weight="700">O₂ +</text><text class="small" x="414" y="98" font-size="12" font-weight="700">CO₂ −</text>
+<text class="large" x="250" y="566" text-anchor="middle" font-size="16" font-weight="800">Органи тіла</text>
+<text class="large" x="290" y="624" text-anchor="middle" font-size="11">мозок, м’язи, печінка, нирки</text>
+<text class="large" x="416" y="566" font-size="12" font-weight="700">O₂ −</text><text class="large" x="416" y="584" font-size="12" font-weight="700">CO₂ +</text>
+<text class="small" x="268" y="205" text-anchor="end" font-size="12">легенева артерія</text>
+<text class="small" x="412" y="205" font-size="12">легеневі вени</text>
+<text class="large" x="412" y="490" font-size="12">аорта</text>
+<text class="large" transform="translate(54 430) rotate(-90)" text-anchor="middle" font-size="12">порожнисті вени</text>
+</svg>
+<p class="note">Серце намальоване так, ніби людина стоїть до тебе обличчям: її права сторона — ліворуч на малюнку.</p>
+</div>
+<div>
+<div class="card">
+<div class="seg" role="group" aria-label="Яке коло показати">
+<button data-m="small" aria-pressed="false">Мале коло</button>
+<button data-m="large" aria-pressed="false">Велике коло</button>
+<button data-m="both" aria-pressed="true">Обидва</button>
+</div>
+<div class="ctl"><button id="pl" type="button">Пауза</button><label>Швидкість <input id="sp" type="range" min="0.3" max="2.5" step="0.1" value="1"></label></div>
+<div class="legend"><span><i style="background:var(--red)"></i>кров із киснем</span><span><i style="background:var(--blue)"></i>кров із вуглекислим газом</span></div>
+<div id="steps"></div>
+</div>
+<div class="card" id="info" style="margin-top:16px" aria-live="polite">
+<h2>Натисни на схему</h2>
+<p>Обери серце, легені, судини або органи тіла — тут з’явиться пояснення.</p>
+<div class="tip"><b>Запам’ятай:</b> артерії несуть кров від серця, а вени — до серця. Колір залежить від того, чи є в крові кисень, а не від типу судини.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",sv=document.getElementById("sv");
+var R=[224,65,58],B=[58,111,216];
+function mix(a,b,t){return "rgb("+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)})+")"}
+var C={
+small:[["M200,372 H280 V130",B,B,"art_p"],["M280,130 V85 Q340,55 400,85 V130",B,R,"lungs"],["M400,130 V345",R,R,"vein_p"]],
+large:[["M400,345 V545",R,R,"aorta"],["M400,545 V590 H150",R,B,"body"],["M150,590 H70 V272 H200 V372",B,B,"vena"]]};
+var INFO={
+ra:["Праве передсердя","Сюди по порожнистих венах повертається кров з усього тіла. Вона синя: у ній майже немає кисню, зате є вуглекислий газ. Тут велике коло закінчується."],
+rv:["Правий шлуночок","Скорочується й виштовхує синю кров у легеневу артерію. Тут починається мале коло."],
+la:["Ліве передсердя","Приймає червону кров із киснем, яка прийшла з легень по легеневих венах. Тут мале коло закінчується."],
+lv:["Лівий шлуночок","Найсильніший м’яз серця. Він виштовхує червону кров в аорту, тому що їй треба дістатися до всього тіла. Тут починається велике коло."],
+art_p:["Легенева артерія","Артерії несуть кров від серця. Ця артерія особлива: у ній тече синя кров, бо вона веде до легень, щоб змінити вуглекислий газ на кисень."],
+lungs:["Легені","Тут кров віддає вуглекислий газ, який ми видихаємо, і забирає кисень із повітря, яким ми дихаємо. Синя кров стає червоною."],
+vein_p:["Легеневі вени","Вени несуть кров до серця. Ці вени особливі: у них тече червона кров із киснем."],
+aorta:["Аорта","Найбільша артерія тіла. Від неї відгалужуються судини до мозку, м’язів, печінки, нирок і всіх інших органів."],
+body:["Органи тіла","У найдрібніших судинах, капілярах, кров віддає кисень клітинам і забирає вуглекислий газ. Червона кров стає синьою."],
+vena:["Порожнисті вени","Збирають синю кров від усього тіла й несуть її до правого передсердя."]};
+var ST={
+small:[["rv","Правий шлуночок виштовхує синю кров у легеневу артерію."],["art_p","Артерія несе кров до легень."],["lungs","У легенях кров віддає CO₂ і бере O₂."],["vein_p","Червона кров іде легеневими венами."],["la","Кров потрапляє в ліве передсердя."]],
+large:[["lv","Лівий шлуночок виштовхує червону кров в аорту."],["aorta","Артерії розносять кров до органів."],["body","В органах кров віддає O₂ і забирає CO₂."],["vena","Сині вени збирають кров і несуть до серця."],["ra","Кров потрапляє в праве передсердя."]]};
+var trk=document.getElementById("trk"),pp=document.getElementById("pp"),hits=document.getElementById("hits"),parts=[];
+Object.keys(C).forEach(function(name){
+var segs=C[name].map(function(s){
+var p=document.createElementNS(NS,"path");p.setAttribute("d",s[0]);p.setAttribute("fill","none");p.setAttribute("stroke-width","12");p.setAttribute("stroke-linecap","round");p.setAttribute("stroke-linejoin","round");p.setAttribute("class","trk "+name);
+p.setAttribute("stroke-opacity",".5");
+p.setAttribute("stroke",s[3]=="lungs"?"url(#gL)":s[3]=="body"?"url(#gB)":mix(s[1],s[2],0));
+trk.appendChild(p);
+var h=document.createElementNS(NS,"path");h.setAttribute("d",s[0]);h.setAttribute("class","hit "+name);h.setAttribute("data-k",s[3]);h.setAttribute("tabindex","0");h.setAttribute("role","button");h.setAttribute("aria-label",INFO[s[3]][0]);hits.appendChild(h);
+return {L:p.getTotalLength(),a:s[1],b:s[2]};});
+var total=segs.reduce(function(x,s){return x+s.L},0),N=14;
+for(var i=0;i<N;i++){var c=document.createElementNS(NS,"circle");c.setAttribute("r","5");c.setAttribute("class",name);c.setAttribute("stroke","#fff");c.setAttribute("stroke-width","1.5");pp.appendChild(c);
+parts.push({c:c,d:i*total/N,total:total,segs:segs,els:trk.querySelectorAll("."+name)});}
+});
+function draw(){parts.forEach(function(q){
+var d=((q.d%q.total)+q.total)%q.total,k=0;
+while(k<q.segs.length-1&&d>q.segs[k].L){d-=q.segs[k].L;k++}
+var s=q.segs[k],pt=q.els[k].getPointAtLength(Math.min(d,s.L));
+q.c.setAttribute("cx",pt.x);q.c.setAttribute("cy",pt.y);q.c.setAttribute("fill",mix(s.a,s.b,d/s.L));
+q.c.style.opacity=(sv.getAttribute("class")=="m-small"&&q.c.getAttribute("class")=="large")||(sv.getAttribute("class")=="m-large"&&q.c.getAttribute("class")=="small")?0:1;});}
+var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,paused=reduce,speed=1,last=0;
+var pl=document.getElementById("pl"),sp=document.getElementById("sp");
+function frame(t){var dt=Math.min(.05,(t-last)/1000||0);last=t;if(!paused){parts.forEach(function(q){q.d+=dt*speed*90});draw()}requestAnimationFrame(frame)}
+pl.textContent=paused?"Грати":"Пауза";
+pl.onclick=function(){paused=!paused;pl.textContent=paused?"Грати":"Пауза"};
+sp.oninput=function(){speed=parseFloat(sp.value)};
+var stepsEl=document.getElementById("steps"),info=document.getElementById("info");
+function sel(k){
+document.querySelectorAll("[data-k]").forEach(function(e){e.classList.toggle("sel",e.getAttribute("data-k")==k)});
+document.querySelectorAll("#steps button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-s")==k)});
+var d=INFO[k];info.innerHTML="<h2></h2><p></p>";info.firstChild.textContent=d[0];info.lastChild.textContent=d[1];}
+function setMode(m){
+sv.setAttribute("class","m-"+m);
+document.querySelectorAll(".seg button").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-m")==m)});
+stepsEl.innerHTML="";
+if(m=="both"){var p=document.createElement("p");p.className="both";p.textContent="Серце працює як насос із двох половин. Права половина качає кров у легені (мале коло), ліва — по всьому тілу (велике коло). Кров щоразу повертається до серця.";stepsEl.appendChild(p);}
+else{var ol=document.createElement("ol");ol.className="steps";ST[m].forEach(function(s){var li=document.createElement("li"),b=document.createElement("button");b.type="button";b.textContent=s[1];b.setAttribute("data-s",s[0]);b.onclick=function(){sel(s[0])};li.appendChild(b);ol.appendChild(li)});stepsEl.appendChild(ol);}
+draw();}
+document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(){setMode(b.getAttribute("data-m"))}});
+document.querySelectorAll("[data-k]").forEach(function(e){e.addEventListener("click",function(){sel(e.getAttribute("data-k"))});e.addEventListener("keydown",function(ev){if(ev.key=="Enter"||ev.key==" "){ev.preventDefault();sel(e.getAttribute("data-k"))}})});
+setMode("both");requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
